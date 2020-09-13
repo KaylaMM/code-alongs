@@ -2,36 +2,26 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const TodoItem = ({ todo, markComplete, delTodo }) => {
-  const getStyle = () => {
-    return {
-      background: "#f4f4f4",
-      padding: "10px",
-      borderBottom: "1px #ccc dotted",
-      textDecoration: todo.completed ? "line-through" : "none",
-    };
-  };
-
-  const onChange = (event) => {
-    event.preventDefault();
-    markComplete(todo);
-  };
-
-  const onClick = (event) => {
-    event.preventDefault();
-    delTodo(todo);
-  };
 
   return (
-    <div style={getStyle()}>
+    <div
+      style={{
+        background: "#f4f4f4",
+        padding: "10px",
+        borderBottom: "1px #ccc dotted",
+        textDecoration: todo.completed ? "line-through" : "none",
+      }}
+    >
       <p>
-        <input type="checkbox" onChange={onChange} /> {todo.title}
-        <button onClick={onClick} style={btnStyle}>
+        <input type="checkbox" onChange={() => markComplete(todo.id)} />{" "}
+        {todo.title}
+        <button onClick={() => delTodo(todo.id)} style={btnStyle}>
           x
         </button>
       </p>
     </div>
   );
-};
+}
 
 //Prop Types
 TodoItem.propTypes = {
