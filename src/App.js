@@ -28,7 +28,7 @@ class App extends Component {
         return todo;
       }),
     });
-    // console.log(id);
+  
   };
 
   //Delete Todo

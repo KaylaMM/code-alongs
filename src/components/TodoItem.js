@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const TodoItem = ({ todo, markComplete, delTodo }) => {
+  console.log(todo);
 
   return (
     <div
@@ -21,7 +22,7 @@ const TodoItem = ({ todo, markComplete, delTodo }) => {
       </p>
     </div>
   );
-}
+};
 
 //Prop Types
 TodoItem.propTypes = {
