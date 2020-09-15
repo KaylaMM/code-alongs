@@ -21,7 +21,7 @@ const TodoItem = ({ todo, markComplete, delTodo }) => {
       </p>
     </div>
   );
-}
+};
 
 //Prop Types
 TodoItem.propTypes = {
