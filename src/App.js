@@ -1,82 +1,83 @@
-import React, { Component, Fragment } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import Header from "./components/layout/Header";
 import Todos from "./components/Todos";
 import AddTodo from "./components/AddTodo";
 import About from "./components/pages/About";
-// import { v4 as uuid } from "uuid";
 import axios from "axios";
 
-class App extends Component {
-  state = {
-    todos: [],
-  };
+const App = () => {
+  const [todos, setTodos] = useState([]);
 
-  componentDidMount() {
-    axios
-      .get("https://jsonplaceholder.typicode.com/todos?_limit=10 ")
-      .then((res) => this.setState({ todos: res.data }));
-  }
+  useEffect(() => {
+    const fetchTodos = async () => {
+      const result = await axios(
+        "https://jsonplaceholder.typicode.com/todos?_limit=10 "
+      );
+      return setTodos(result.data);
+    };
+    fetchTodos();
+  }, []);
 
   //Toggle Complete
-  markComplete = (id) => {
-    this.setState({
-      todos: this.state.todos.map((todo) => {
+  const markComplete = (id) => {
+    setTodos(
+      todos.map((todo) => {
         if (todo.id === id) {
           todo.completed = !todo.completed;
         }
         return todo;
-      }),
-    });
-  
+      })
+    );
   };
 
   //Delete Todo
-  delTodo = (id) => {
+  const delTodo = (id) => {
     axios
       .delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
-      .then((res) =>
-        this.setState({
-          todos: [...this.state.todos.filter((todo) => todo.id !== id)],
-        })
-      );
+      .then(() => setTodos([...todos.filter((todo) => todo.id !== id)]))
+      .catch((err) => {
+        console.log("Error:", err);
+      });
   };
 
   //Add Todo
-  addTodo = (title) => {
+  const addTodo = (title) => {
     axios
       .post("https://jsonplaceholder.typicode.com/todos", {
         title,
         completed: false,
       })
-      .then((res) => this.setState({ todos: [...this.state.todos, res.data] }));
+      .then((res) => setTodos([res.data, ...todos]))
+      .catch((err) => {
+        console.log("Error:", err);
+      });
   };
 
-  render() {
-    return (
-      <Router>
-        <div className="App">
-          <div className="container">
-            <Header />
-            <Route
-              exact
-              path="/"
-              render={(props) => (
-                <Fragment>
-                  <AddTodo addTodo={this.addTodo} />
-                  <Todos
-                    todos={this.state.todos}
-                    markComplete={this.markComplete}
-                    delTodo={this.delTodo}
-                  />
-                </Fragment>
-              )}
-            />
-            <Route path="/about" c omponent={About} />
-          </div>
+  return (
+    <Router>
+      <div className="App">
+        <div className="container">
+          <Header />
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <Fragment>
+                <AddTodo addTodo={addTodo} />
+                <Todos
+                  todos={todos}
+                  markComplete={markComplete}
+                  delTodo={delTodo}
+                />
+              </Fragment>
+            )}
+          />
+          <Route path="/about" component={About} />
         </div>
-      </Router>
-    );
-  }
-}
+      </div>
+    </Router>
+  );
+};
+
 export default App;
